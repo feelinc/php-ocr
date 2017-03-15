@@ -2,45 +2,37 @@
 
 return [
 
-    'collector' => env('EXCHANGE_RATE_DRIVER', 'openexchangerate'),
-
     /*
     |--------------------------------------------------------------------------
-    | Storage
+    | Driver
     |--------------------------------------------------------------------------
     |
     */
 
-    'database' => env('DB_CONNECTION', 'mysql'),
-    'table' => env('EXCHANGE_RATE_TABLE', 'exchange_rates'),
+    'driver' => env('OCR_DRIVER', 'tesseract'),
 
     /*
     |--------------------------------------------------------------------------
-    | Client
+    | Services
     |--------------------------------------------------------------------------
     |
     */
 
-    'client' => [
-        'user_agent'    => env('WEB_PARSER_CURL_USER_AGENT', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36'),
-        'ip_address'    => env('WEB_PARSER_CURL_IP_ADDRESS', '18.96.236.10'),
-        'options'       => [
-            'timeout' => env('WEB_PARSER_CURL_TIMEOUT', 15), // seconds
-            'debug'   => env('WEB_PARSER_CURL_DEBUG', false)
-        ]
+    'services' => [
+        'tesseract' => Sule\OCR\Service\Tesseract::class
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Open OCR
+    | Tesseract
     |--------------------------------------------------------------------------
+    |
     */
 
-    'openexchangerate' => [
-        'class' => Sule\OCR\Collector\OpenOCR::class, 
-        'params' => [
-            'app_id' => '1ee77654c7694a0097ebe6f4cfd6e801'
-        ]
+    'tesseract' => [
+        'executable' => env('OCR_TESSERACT_EXECUTABLE', '/usr/bin/tesseract'),
+        'enrich' => env('OCR_ENRICH_EXECUTABLE', base_path('vendor/sule/ocr/src/bin/enrich')),
+        'textcleaner' => env('OCR_TEXTCLEANER_EXECUTABLE', base_path('vendor/sule/ocr/src/bin/textcleaner'))
     ]
 
 ];

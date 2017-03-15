@@ -1,6 +1,6 @@
 <?php
 
-namespace Sule\OCR;
+namespace Sule\OCR\Service;
 
 /*
  * This file is part of the Sulaeman OCR package.
@@ -13,7 +13,7 @@ namespace Sule\OCR;
 
 use Psr\Log\LoggerInterface;
 
-interface ProviderInterface
+interface ServiceInterface
 {
     /**
      * Set the logger instance.
@@ -24,10 +24,27 @@ interface ProviderInterface
     public function setLogger(LoggerInterface $logger);
 
     /**
-     * Return the parsed data from a file path.
+     * Sets a option value.
      *
-     * @param  string  $filePath
+     * @param string $key
+     * @param mixed  $value
+     * @return self
+     */
+    public function option($key, $value);
+
+    /**
+     * Sets a configuration value.
+     *
+     * @param string $key
+     * @param string $value
+     * @return self
+     */
+    public function config($key, $value);
+
+    /**
+     * Executes service command and returns the generated output.
+     *
      * @return string
      */
-    public function parse($filePath);
+    public function parse();
 }

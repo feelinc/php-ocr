@@ -18,6 +18,20 @@ use Sule\OCR\OCR;
 abstract class OCRServiceProvider extends ServiceProvider
 {
     /**
+     * The service classes.
+     *
+     * @var array
+     */
+    protected $serviceClasses;
+
+    /**
+     * The service instances.
+     *
+     * @var array
+     */
+    protected $services;
+
+    /**
      * Boot the service provider.
      *
      * @return void
@@ -34,7 +48,8 @@ abstract class OCRServiceProvider extends ServiceProvider
     {
         $this->setupConfig();
 
-        $this->registerOCRServices();
+        $this->registerOCR();
+        $this->registerServices();
     }
 
     /**
@@ -48,17 +63,78 @@ abstract class OCRServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the OCR services.
+     * Register the OCR.
      *
      * @return void
      */
-    protected function registerOCRServices()
+    protected function registerOCR()
     {
         $this->app->singleton(OCR::class, function ($app) {
-            $config = $app['config']['sule/ocr'];
+            $driver  = $app['config']['sule/ocr.driver'];
 
-            return new OCR($config);
+            $serviceClasses   = $this->getServiceClasses();
+            $serviceInstances = $this->getServices();
+            $services         = [];
+            foreach ($serviceClasses as $index => $class) {
+                $services[$index] = $serviceInstances[$class];
+            }
+
+            $ocr = new OCR($driver, $services);
+            $ocr->setLogger($app['log']);
+
+            return $ocr;
         });
+    }
+
+    /**
+     * Register the services.
+     *
+     * @return void
+     */
+    protected function registerServices()
+    {
+        foreach ($this->getServices() as $index => $item) {
+            $this->app->singleton($index, function () use ($item) {
+                return $item;
+            });
+        }
+    }
+
+    /**
+     * Return collector instances available.
+     *
+     * @return array
+     * @throws \RuntimeException
+     */
+    protected function getServices()
+    {
+        if (is_null($this->services)) {
+            $this->services = [];
+
+            foreach ($this->getServiceClasses() as $key => $item) {
+                $config = $this->app['config']['sule/ocr.'.$key];
+
+                $this->services[$item] = new $item($config);
+                $this->services[$item]->setLogger($this->app['log']);
+            }
+        }
+
+        return $this->services;
+    }
+
+    /**
+     * Return service classes available.
+     *
+     * @return array
+     * @throws \RuntimeException
+     */
+    protected function getServiceClasses()
+    {
+        if (is_null($this->serviceClasses)) {
+            $this->serviceClasses = $this->app['config']['sule/ocr.services'];
+        }
+
+        return $this->serviceClasses;
     }
 
     /**
@@ -68,6 +144,9 @@ abstract class OCRServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [OCR::class];
+        return array_merge(
+            [OCR::class], 
+            array_values($this->getServiceClasses())
+        );
     }
 }

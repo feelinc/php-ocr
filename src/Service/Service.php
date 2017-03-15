@@ -1,6 +1,6 @@
 <?php
 
-namespace Sule\OCR;
+namespace Sule\OCR\Service;
 
 /*
  * This file is part of the Sulaeman OCR package.
@@ -13,7 +13,7 @@ namespace Sule\OCR;
 
 use Psr\Log\LoggerInterface;
 
-abstract class Provider implements ProviderInterface
+abstract class Service implements ServiceInterface
 {
     /**
      * The logger instance.
@@ -23,30 +23,21 @@ abstract class Provider implements ProviderInterface
     protected $logger;
 
     /**
-     * The driver.
-     *
-     * @var string
-     */
-    protected $driver;
-
-    /**
-     * The service instances.
+     * The config.
      *
      * @var array
      */
-    protected $services;
+    protected $config;
 
     /**
-     * Create a new provider.
+     * Create a new instance.
      *
-     * @param  string  $driver
-     * @param  array   $services
+     * @param  array  $config
      * @return void
      */
-    public function __construct($driver, Array $services)
+    public function __construct(Array $config)
     {
-        $this->driver   = $driver;
-        $this->services = $services;
+        $this->config = $config;
     }
 
     /**
