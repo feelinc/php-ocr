@@ -1,0 +1,31 @@
+{
+  "name": "sule/ocr",
+  "description": "OCR Module.",
+  "keywords": ["ocr"],
+  "license": "MIT",
+  "type": "project",
+  "require": {
+    "php": "^5.5.9 || ^7.0",
+    "illuminate/support": "5.1.* || 5.2.* || 5.3.* || 5.4.*"
+  },
+  "require-dev": {
+    "illuminate/console": "5.1.* || 5.2.* || 5.3.* || 5.4.*",
+    "illuminate/database": "5.1.* || 5.2.* || 5.3.* || 5.4.*",
+    "fzaninotto/faker": "~1.4",
+    "mockery/mockery": "0.9.*",
+    "phpunit/phpunit": "~4.0",
+    "phpspec/phpspec": "~2.1"
+  },
+  "autoload": {
+    "classmap": [
+      "src/Exceptions.php"
+    ], 
+    "psr-4": {
+      "Sule\\OCR\\": "src"
+    }
+  },
+  "autoload-dev": {},
+  "config": {
+    "preferred-install": "dist"
+  }
+}
