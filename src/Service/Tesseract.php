@@ -291,7 +291,7 @@ class Tesseract extends Service
      */
     private function buildPsmParam()
     {
-        return $this->psm ? " -psm $this->psm" : '';
+        return $this->psm ? " --psm $this->psm" : '';
     }
 
     /**
