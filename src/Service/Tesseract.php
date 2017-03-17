@@ -152,15 +152,19 @@ class Tesseract extends Service
         // Enrich the source image first
         if (file_exists($this->enrich)) {
             exec($this->enrich.' '.$this->source.' '.$this->source, $output, $return);
-            \Log::info('ENRICH OUTPUT : '.json_encode($output));
-            \Log::info('ENRICH RETURN : '.json_encode($return));
+            if ( ! empty($output)) {
+                $this->writeLog('info', 'ENRICH OUTPUT : '.json_encode($output));
+                $this->writeLog('info', 'ENRICH RETURN : '.json_encode($return));
+            }
         }
 
         // Clean the source image first
         if (file_exists($this->textcleaner)) {
             exec($this->textcleaner.' -g -e stretch -f 25 -o 5 -s 1 -T -p 20 '.$this->source.' '.$this->source, $output, $return);
-            \Log::info('TEXTCLEANER OUTPUT : '.json_encode($output));
-            \Log::info('TEXTCLEANER RETURN : '.json_encode($return));
+            if ( ! empty($output)) {
+                $this->writeLog('info', 'TEXTCLEANER OUTPUT : '.json_encode($output));
+                $this->writeLog('info', 'TEXTCLEANER RETURN : '.json_encode($return));
+            }
         }
 
         $result = trim(`{$this->buildCommand()}`);
